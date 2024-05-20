@@ -63,20 +63,30 @@ def rename_and_move_media(folder_path, move_files):
             if exif_tag_value:
                 try:
                     year, quarter, month, day, hour, minute, second = extract_date_time(exif_tag_value)
-                    new_filename = f"{year}{month:02d}{day:02d}_{hour:02d}{minute:02d}{second:02d}{os.path.splitext(filename)[1]}"
-                    if move_files:
-                        new_folder_path = os.path.join(folder_path, f"{year}_Q{quarter}")
-                        os.makedirs(new_folder_path, exist_ok=True)
-                        new_file_path = os.path.join(new_folder_path, new_filename)
-                    else:
-                        new_file_path = os.path.join(folder_path, new_filename)
+                    file_base = f"{year}{month:02d}{day:02d}_{hour:02d}{minute:02d}{second:02d}"
+                    file_extension = f"{os.path.splitext(filename)[1]}"
+                    new_filename = f"{file_base}{file_extension}"
                     
+                    if move_files:
+                        target_folder_path = os.path.join(folder_path, f"{year}_Q{quarter}")
+                        os.makedirs(target_folder_path, exist_ok=True)
+                    else:
+                        target_folder_path = folder_path
+
+                    new_file_path = os.path.join(target_folder_path, new_filename)
                     if file_path == new_file_path:
                         st.info(f"File {file_path} is already named correctly.")
-                    elif not os.path.exists(new_file_path):
+                    elif os.path.exists(new_file_path):
+                        i=1
+                        original_new_path = new_file_path
+                        while os.path.exists(new_file_path):
+                            new_file_path = os.path.join(target_folder_path, f"{file_base}_{i}{file_extension}")
+                            i+=1
+                        st.info(f"File {original_new_path} already exists in the target folder. Renaming file to {new_file_path}")
                         os.rename(file_path, new_file_path)
                     else:
-                        st.error(f"File {new_filename} already exists in the target folder. Skipping {filename}")
+                        os.rename(file_path, new_file_path)      
+
                 except Exception as e:
                     st.error(f"Error processing file {filename}: {e}")
 
