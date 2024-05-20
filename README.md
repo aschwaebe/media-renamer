@@ -7,7 +7,7 @@ BeCareful since originals will not be backuped.
 - Do not use this tool on the original folder.
 - Poetry must be installed.
 - If you want to use it for .mp4 renaming ffmpeg must be installed.
-    You can add ffmpeg (ffprobe.exe) add to you PATH variable or place it in the same folder you run the script from.
+    You can add ffmpeg (ffprobe.exe) to your PATH variable or place it in the same folder you run the script from.
 
 # Getting Started
 1. run poetry install
