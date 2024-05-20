@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "media-renamer"
+version = "0.1.0"
+description = ""
+authors = ["Alexander Schwaebe"]
+license = "GNU"
+readme = "README.md"
+packages = [{ include = "app" }]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+streamlit = "^1.34.0"
+ffmpeg-python = "^0.2.0"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
