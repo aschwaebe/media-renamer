@@ -56,10 +56,18 @@ def extract_date_time(date_obj):
     return year, quarter, month, day, hour, minute, second
 
 def rename_and_move_media(folder_path, move_files):
-    for filename in os.listdir(folder_path):
+    progress_bar = st.progress(0)
+    file_paths = os.listdir(folder_path)
+    n_files = len(file_paths)
+    for i, filename in enumerate(file_paths, 1):
+        progress_bar.progress(i/n_files)
         if filename.lower().endswith(FILE_ENDINGS):
             file_path = os.path.join(folder_path, filename)
-            exif_tag_value = get_exif_tag(file_path)
+            try:
+                exif_tag_value = get_exif_tag(file_path)
+            except:
+                st.info(f"Could not read exif tag from {file_path}. Skipping File.")
+                continue
             if exif_tag_value:
                 try:
                     year, quarter, month, day, hour, minute, second = extract_date_time(exif_tag_value)
@@ -110,8 +118,9 @@ if st.session_state.folder_path:
     st.text_input('Selected folder:', st.session_state.folder_path)
     n_images = len([file for file in os.listdir(st.session_state.folder_path) if str(file).endswith(IMAGE_ENDINGS)])
     n_videos = len([file for file in os.listdir(st.session_state.folder_path) if str(file).endswith(VIDEO_ENDINGS)])
-    st.info(f"{n_images} images found.")
-    st.info(f"{n_videos} videos found.")
+    st.info(f"{n_images + n_videos} media files found.")
+    st.info(f"  {n_images} images found.")
+    st.info(f"  {n_videos} videos found.")
 
 # Add a checkbox for moving files
 move_files = st.checkbox("Organize media in year/quarter YYYY_QQ subolders?", value=st.session_state.move_files)
