@@ -1,3 +1,6 @@
 /photos
+/media
 .venv
 */ffprobe.exe
+*/__pycache__
+/.vscode
