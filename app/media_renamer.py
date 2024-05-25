@@ -101,7 +101,8 @@ def rename_and_move_media(folder_path: Path, move_files: bool):
             st.error(f"Error processing file {file_path}: {e}")
 
 
-# TODO RENAMI
+# TODO RENAMING AND DUPLICATES DOES NOT WORK WITHOUT REORGANIZING!
+# TODO BUGGED
 def media_renamer():
     st.subheader("Media Renamer")
     if "folder_path" not in st.session_state:
