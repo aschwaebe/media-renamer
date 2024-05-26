@@ -10,7 +10,7 @@ def compare_hashes(folder_path, hash_algorithm="sha256"):
     progress_bar = st.progress(0)
     file_paths = [
         file
-        for file in Path(st.session_state.hash_folder_path).glob("**/*")
+        for file in Path(folder_path).glob("**/*")
         if str(file).endswith(FILE_ENDINGS)
     ]
     n_files = len(file_paths)
@@ -37,8 +37,12 @@ def compare_hashes(folder_path, hash_algorithm="sha256"):
     return data
 
 
-def hash_analyzer():
-    st.title("Hash Analyzer")
+def file_comparer():
+    st.subheader("File Comparer")
+    st.markdown(
+        "- compares files based on hash codes and prints a table of duplicates. \n"
+        "- Will also look in subfolders."
+    )
     if "hash_folder_path" not in st.session_state:
         st.session_state.hash_folder_path = None
     if st.button("Select Folder", "HashFolderSelector"):
@@ -63,13 +67,13 @@ def hash_analyzer():
             f"{n_images + n_videos} media files ({n_images} images and {n_videos} videos) found in folder and subfolders."
         )
 
-    if st.button("Run Hash Analyzer!", "HashAnalyzerButton"):
+    if st.button("Run File Comparer!", "FileComparerButton"):
         folder_path = st.session_state.hash_folder_path
         df = compare_hashes(folder_path)
         st.success("Photos and Videos have been analyzed succesfully.")
         # Display DataFrame with buttons
         st.write("## Files with Open Buttons")
-        for index, row in df.iterrows():
+        for _, row in df.iterrows():
             col1, col2 = st.columns([2, 1])
             col1.write(row["file_path"])
             # col2.write(row['file_hash'])

@@ -55,6 +55,10 @@ def rename_and_move_media(folder_path: Path, move_files: bool):
             new_file_path = target_folder_path / new_filename
             duplicated_file_path = duplicated_folder_path / new_filename
 
+            if file_path == new_file_path:
+                # already named correcly. / no action required
+                continue
+
             if new_file_path.exists():
                 cur_file_hash = compute_file_hash(file_path)
                 target_file_hash = compute_file_hash(new_file_path)
@@ -102,9 +106,15 @@ def rename_and_move_media(folder_path: Path, move_files: bool):
 
 
 # TODO RENAMING AND DUPLICATES DOES NOT WORK WITHOUT REORGANIZING!
-# TODO BUGGED
+# TODO BUGGEDm
 def media_renamer():
     st.subheader("Media Renamer")
+    st.markdown("- Renames media files in a given folder" 
+            "based on exif or video date information.\n"
+            "- Renamed files can be organized in date/quarter subfolders.\n"
+            "- Duplicate files (based on hash) will be put in a duplicated folders.\n" 
+            "- files will be renamed on name conflict.")
+
     if "folder_path" not in st.session_state:
         st.session_state.folder_path = None
     if "move_files" not in st.session_state:

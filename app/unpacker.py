@@ -14,11 +14,17 @@ def unpack_files(folder_path: Path):
         progress_bar.progress(i / n_files)
         new_path = folder_path / file_path.name
         new_path = next_free_path(new_path)
+        if new_path.name != file_path.name:
+            st.info(f"filename: {file_path.name} already exists. renaming to {new_path.name}")
         os.rename(file_path, new_path)
 
 
 def unpacker():
     st.subheader("Unpacker")
+    st.markdown(
+        "- Moves all media files (images and photos) to parent folder.\n"
+        "- On name conflicts Files will be renamed.")
+
     if "unpacker_folder_path" not in st.session_state:
         st.session_state.unpacker_folder_path = None
     if st.button("Select Folder"):

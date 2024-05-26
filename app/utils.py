@@ -4,6 +4,7 @@ from datetime import datetime
 from pathlib import Path
 from subprocess import check_output
 from tkinter import filedialog
+import streamlit as st
 
 import ffmpeg
 from PIL import Image
@@ -17,6 +18,24 @@ IMAGE_ENDINGS = (".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".gif")
 VIDEO_ENDINGS = (".mp4",)
 FILE_ENDINGS = IMAGE_ENDINGS + VIDEO_ENDINGS
 N_HASH = 6
+
+def remove_streamlit_head():
+    
+    st.markdown(
+        """
+    <style>
+        #MainMenu, header, footer {visibility: hidden;}
+        section[data-testid="stSidebar"] div:first-child {
+            top: 0;
+            height: 100vh;
+        }
+        .block-container {
+            margin-top:-100px;
+        }
+    </style>
+    """,
+        unsafe_allow_html=True,
+    )
 
 
 def folder_picker():
