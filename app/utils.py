@@ -4,9 +4,9 @@ from datetime import datetime
 from pathlib import Path
 from subprocess import check_output
 from tkinter import filedialog
-import streamlit as st
 
 import ffmpeg
+import streamlit as st
 from PIL import Image
 
 EXIF_TAGS = {
@@ -19,8 +19,8 @@ VIDEO_ENDINGS = (".mp4",)
 FILE_ENDINGS = IMAGE_ENDINGS + VIDEO_ENDINGS
 N_HASH = 6
 
+
 def remove_streamlit_head():
-    
     st.markdown(
         """
     <style>
@@ -65,8 +65,34 @@ def open_file(file_path):
     check_output(command, shell=True)
 
 
-def get_exif_tag(file_path):
-    if str(file_path).endswith(IMAGE_ENDINGS):
+def get_date(file_path) -> datetime:
+    """
+    Retrieves the date from the given file.
+
+    Parameters:
+        file_path (str): The path to the file from which to retrieve the EXIF tag.
+
+    Returns:
+        datetime.datetime or None: The datetime value of the EXIF tag if it exists,
+        otherwise None. For videos ffmpeg is used.
+
+    Raises:
+        None
+
+    Notes:
+        - This function checks if the file path ends with the supported image or video
+          file extensions.
+        - If the file is an image, it opens the image using the PIL library and retrieves
+          the EXIF data. It then extracts the date and time from the EXIF data and
+          returns it as a datetime object.
+        - If the file is a video, it uses the ffmpeg library to probe the video metadata.
+          It iterates over the streams in the metadata and checks if the stream contains
+          the "creation_time" tag. If it does, it retrieves the creation time and returns
+          it as a datetime object.
+        - If the file path does not end with a supported file extension or if the EXIF tag
+          cannot be found, None is returned.
+    """
+    if str(file_path).lower().endswith(IMAGE_ENDINGS):
         image = Image.open(file_path)
         exif_data = image._getexif()
         if exif_data:
@@ -75,7 +101,8 @@ def get_exif_tag(file_path):
             )
             if date_str is not None:
                 return datetime.strptime(date_str, "%Y:%m:%d %H:%M:%S")
-    if str(file_path).endswith(VIDEO_ENDINGS):
+
+    if str(file_path).lower().endswith(VIDEO_ENDINGS):
         metadata = ffmpeg.probe(file_path)
         for stream in metadata.get("streams", []):
             if "tags" in stream and "creation_time" in stream["tags"]:
@@ -85,7 +112,16 @@ def get_exif_tag(file_path):
     return None
 
 
-def extract_date_time(date_obj):
+def get_date_components(date_obj):
+    """
+    Extracts the year, quarter, month, day, hour, minute, and second from the given date object.
+
+    Parameters:
+        date_obj (datetime.datetime): The date object from which to extract the date and time information.
+
+    Returns:
+        tuple: A tuple containing the year, quarter, month, day, hour, minute, and second.
+    """
     year = date_obj.year
     month = date_obj.month
     day = date_obj.day

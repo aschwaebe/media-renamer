@@ -1,14 +1,18 @@
-# Media Renamer
+# Renamer
 - Simple tool to select a folder and rename photos and videos (.mp4 only) based on exif tags and video data.
 - Media can optionally be organized in year/quarter subfolders.
 - BeCareful since originals will not be backuped.
 - Duplicates will be detected based on file hash and will be copied into duplicated folders.
 
-# Folder Unpacker
+# Unpacker
 unpacks all media inside a subfolder in the chosen root folder.
 
-# Duplicate detecter.
-- detects a list of 
+# Inferrer
+- infers events from a given folder by selecting subfolders name.
+- event start and event end is infered by maximum and minum date inside the folders.
+
+# Comparer
+- detects duplicates in a chosen folder and subfolders based on hashvalues.
 
 # Notes
 - Do not use this tool on the original folder.
